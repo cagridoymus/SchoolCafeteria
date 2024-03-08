@@ -4,13 +4,16 @@ using System.Collections.Generic;
 class Program
 {
     static List<FoodItem> menu = new List<FoodItem>();
+    static List<Student> students = new List<Student>();
 
     static void Main()
     {
         while (true)
         {
+            Console.WriteLine("********** Cafeteria Management System **********");
             Console.WriteLine("1. Manage Menu");
             Console.WriteLine("2. Display Daily Cafeteria Menu");
+            Console.WriteLine("3. Student Account Management");
             Console.WriteLine("0. Exit");
 
             int choice = GetIntInput("Enter your choice: ");
@@ -22,6 +25,9 @@ class Program
                     break;
                 case 2:
                     DisplayDailyMenu();
+                    break;
+                case 3:
+                    StudentAccountManagement();
                     break;
                 case 0:
                     Environment.Exit(0);
@@ -35,6 +41,7 @@ class Program
 
     static void ManageMenu()
     {
+        Console.WriteLine("\n********** Manage Menu **********");
         Console.WriteLine("1. Add Food to the Menu");
         Console.WriteLine("2. Delete Food from the Menu");
 
@@ -56,6 +63,7 @@ class Program
 
     static void AddFoodToMenu()
     {
+        Console.WriteLine("\n********** Add Food to the Menu **********");
         Console.Write("Enter food name: ");
         string foodName = Console.ReadLine();
         double foodPrice = GetDoubleInput("Enter food price: ");
@@ -83,7 +91,7 @@ class Program
 
     static void DisplayCurrentMenu()
     {
-        Console.WriteLine("Current Menu:");
+        Console.WriteLine("\n********** Current Menu **********");
         foreach (var foodItem in menu)
         {
             Console.WriteLine($"{foodItem.Name} - ${foodItem.Price:F2}");
@@ -94,15 +102,97 @@ class Program
     {
         if (menu.Count == 0)
         {
+            Console.WriteLine("\n********** Daily Cafeteria Menu **********");
             Console.WriteLine("The menu is currently empty. Add items to display the daily menu.");
         }
         else
         {
-            Console.WriteLine("Today's Menu:");
+            Console.WriteLine("\n********** Daily Cafeteria Menu **********");
             foreach (var foodItem in menu)
             {
                 Console.WriteLine($"{foodItem.Name} - ${foodItem.Price:F2}");
             }
+        }
+    }
+
+    static void StudentAccountManagement()
+    {
+        Console.WriteLine("\n********** Student Account Management **********");
+        Console.WriteLine("1. Add Student");
+        Console.WriteLine("2. Delete Student");
+        Console.WriteLine("3. Search Student Details");
+
+        int choice = GetIntInput("Enter your choice: ");
+
+        switch (choice)
+        {
+            case 1:
+                AddStudent();
+                break;
+            case 2:
+                DeleteStudent();
+                break;
+            case 3:
+                SearchStudentDetails();
+                break;
+            default:
+                Console.WriteLine("Invalid choice. Please try again.");
+                break;
+        }
+    }
+
+    static void AddStudent()
+    {
+        Console.WriteLine("\n********** Add Student **********");
+        Console.Write("Enter student name: ");
+        string studentName = Console.ReadLine();
+        int studentID = GenerateStudentID();
+        double cafeteriaBalance = GetDoubleInput("Enter initial cafeteria balance: ");
+
+        students.Add(new Student { StudentID = studentID, Name = studentName, CafeteriaBalance = cafeteriaBalance });
+        Console.WriteLine($"{studentName} added to the student database with Student ID: {studentID}");
+    }
+
+    static void DeleteStudent()
+    {
+        DisplayStudents();
+        int index = GetIntInput("Enter the index of the student to delete: ");
+
+        if (index >= 0 && index < students.Count)
+        {
+            string deletedStudent = students[index].Name;
+            students.RemoveAt(index);
+            Console.WriteLine($"{deletedStudent} deleted from the student database.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid index. Please try again.");
+        }
+    }
+
+    static void DisplayStudents()
+    {
+        Console.WriteLine("\n********** Current Students **********");
+        foreach (var student in students)
+        {
+            Console.WriteLine($"ID: {student.StudentID} - {student.Name} - Cafeteria Balance: ${student.CafeteriaBalance:F2}");
+        }
+    }
+
+    static void SearchStudentDetails()
+    {
+        Console.WriteLine("\n********** Search Student Details **********");
+        Console.Write("Enter student name to search: ");
+        string searchName = Console.ReadLine();
+        Student foundStudent = students.Find(student => student.Name.Equals(searchName, StringComparison.OrdinalIgnoreCase));
+
+        if (foundStudent != null)
+        {
+            Console.WriteLine($"Student found: ID: {foundStudent.StudentID} - {foundStudent.Name} - Cafeteria Balance: ${foundStudent.CafeteriaBalance:F2}");
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
         }
     }
 
@@ -129,6 +219,12 @@ class Program
 
         return result;
     }
+
+    static int GenerateStudentID()
+    {
+        // Generate a random student ID for simplicity
+        return new Random().Next(1000, 9999);
+    }
 }
 
 class FoodItem
@@ -141,4 +237,11 @@ class FoodItem
         Name = name;
         Price = price;
     }
+}
+
+class Student
+{
+    public int StudentID { get; set; }
+    public string Name { get; set; }
+    public double CafeteriaBalance { get; set; }
 }
