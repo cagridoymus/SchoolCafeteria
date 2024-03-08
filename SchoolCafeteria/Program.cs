@@ -10,6 +10,7 @@ class Program
         while (true)
         {
             Console.WriteLine("1. Manage Menu");
+            Console.WriteLine("2. Display Daily Cafeteria Menu");
             Console.WriteLine("0. Exit");
 
             int choice = GetIntInput("Enter your choice: ");
@@ -18,6 +19,9 @@ class Program
             {
                 case 1:
                     ManageMenu();
+                    break;
+                case 2:
+                    DisplayDailyMenu();
                     break;
                 case 0:
                     Environment.Exit(0);
@@ -62,7 +66,7 @@ class Program
 
     static void DeleteFoodFromMenu()
     {
-        DisplayMenu();
+        DisplayCurrentMenu();
         int index = GetIntInput("Enter the index of the food to delete: ");
 
         if (index >= 0 && index < menu.Count)
@@ -77,14 +81,32 @@ class Program
         }
     }
 
-    static void DisplayMenu()
+    static void DisplayCurrentMenu()
     {
         Console.WriteLine("Current Menu:");
-        for (int i = 0; i < menu.Count; i++)
+        foreach (var foodItem in menu)
         {
-            Console.WriteLine($"{i}. {menu[i].Name} - ${menu[i].Price}");
+            Console.WriteLine($"{foodItem.Name} - ${foodItem.Price:F2}");
         }
     }
+
+    static void DisplayDailyMenu()
+    {
+        if (menu.Count == 0)
+        {
+            Console.WriteLine("The menu is currently empty. Add items to display the daily menu.");
+        }
+        else
+        {
+            Console.WriteLine("Today's Menu:");
+            foreach (var foodItem in menu)
+            {
+                Console.WriteLine($"{foodItem.Name} - ${foodItem.Price:F2}");
+            }
+        }
+    }
+
+    // Helper methods for input validation
 
     static double GetDoubleInput(string prompt)
     {
