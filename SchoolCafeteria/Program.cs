@@ -45,6 +45,7 @@ class Program
         Console.WriteLine("1. Add Food to the Menu");
         Console.WriteLine("2. Delete Food from the Menu");
         Console.WriteLine("3. Update Food Details");
+        Console.WriteLine("4. Search for Food Details"); // New option
 
         int choice = GetIntInput("Enter your choice: ");
 
@@ -59,6 +60,9 @@ class Program
             case 3:
                 UpdateFoodDetails();
                 break;
+            case 4:
+                SearchFoodDetails(); // New case
+                break;
             default:
                 Console.WriteLine("Invalid choice. Please try again.");
                 break;
@@ -71,9 +75,27 @@ class Program
         Console.Write("Enter food name: ");
         string foodName = Console.ReadLine();
         double foodPrice = GetDoubleInput("Enter food price: ");
+        int foodCalories = GetIntInput("Enter food calories: "); // New input for calories
 
-        menu.Add(new FoodItem(foodName, foodPrice));
+        menu.Add(new FoodItem(foodName, foodPrice, foodCalories));
         Console.WriteLine($"{foodName} added to the menu.");
+    }
+
+    static void SearchFoodDetails()
+    {
+        Console.WriteLine("\n********** Search for Food Details **********");
+        Console.Write("Enter food name to search: ");
+        string searchName = Console.ReadLine();
+        FoodItem foundFood = menu.Find(food => food.Name.Equals(searchName, StringComparison.OrdinalIgnoreCase));
+
+        if (foundFood != null)
+        {
+            Console.WriteLine($"Food found: {foundFood.Name} - Price: ${foundFood.Price:F2} - Calories: {foundFood.Calories}");
+        }
+        else
+        {
+            Console.WriteLine("Food not found.");
+        }
     }
 
     static void DeleteFoodFromMenu()
@@ -284,11 +306,13 @@ class FoodItem
 {
     public string Name { get; set; }
     public double Price { get; set; }
+    public int Calories { get; set; } 
 
-    public FoodItem(string name, double price)
+    public FoodItem(string name, double price, int calories)
     {
         Name = name;
         Price = price;
+        Calories = calories;
     }
 }
 
