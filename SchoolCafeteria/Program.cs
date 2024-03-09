@@ -14,7 +14,6 @@ class Program
             Console.WriteLine("1. Manage Menu");
             Console.WriteLine("2. Display Daily Cafeteria Menu");
             Console.WriteLine("3. Student Account Management");
-            Console.WriteLine("4. Display Student Details");
             Console.WriteLine("0. Exit");
 
             int choice = GetIntInput("Enter your choice: ");
@@ -29,9 +28,6 @@ class Program
                     break;
                 case 3:
                     StudentAccountManagement();
-                    break;
-                case 4:
-                    DisplayStudentDetails();
                     break;
                 case 0:
                     Environment.Exit(0);
@@ -48,6 +44,7 @@ class Program
         Console.WriteLine("\n********** Manage Menu **********");
         Console.WriteLine("1. Add Food to the Menu");
         Console.WriteLine("2. Delete Food from the Menu");
+        Console.WriteLine("3. Update Food Details");
 
         int choice = GetIntInput("Enter your choice: ");
 
@@ -58,6 +55,9 @@ class Program
                 break;
             case 2:
                 DeleteFoodFromMenu();
+                break;
+            case 3:
+                UpdateFoodDetails();
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please try again.");
@@ -86,6 +86,45 @@ class Program
             string deletedFood = menu[index].Name;
             menu.RemoveAt(index);
             Console.WriteLine($"{deletedFood} deleted from the menu.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid index. Please try again.");
+        }
+    }
+
+    static void UpdateFoodDetails()
+    {
+        DisplayCurrentMenu();
+        int index = GetIntInput("Enter the index of the food to update: ");
+
+        if (index >= 0 && index < menu.Count)
+        {
+            Console.WriteLine($"\n********** Update Food Details **********");
+            Console.WriteLine($"Current details of {menu[index].Name}:");
+            Console.WriteLine($"1. Name: {menu[index].Name}");
+            Console.WriteLine($"2. Price: ${menu[index].Price:F2}");
+
+            int updateChoice = GetIntInput("Enter the number of the detail to update (0 to cancel): ");
+
+            switch (updateChoice)
+            {
+                case 1:
+                    Console.Write("Enter new food name: ");
+                    menu[index].Name = Console.ReadLine();
+                    Console.WriteLine("Food name updated successfully.");
+                    break;
+                case 2:
+                    menu[index].Price = GetDoubleInput("Enter new food price: ");
+                    Console.WriteLine("Food price updated successfully.");
+                    break;
+                case 0:
+                    Console.WriteLine("Update canceled.");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Update canceled.");
+                    break;
+            }
         }
         else
         {
@@ -141,7 +180,7 @@ class Program
                 SearchStudentDetails();
                 break;
             case 4:
-                DisplayStudentDetails();
+                DisplayStudentDetails(); // Adding the new case
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please try again.");
