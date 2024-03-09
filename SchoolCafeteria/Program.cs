@@ -14,6 +14,7 @@ class Program
             Console.WriteLine("1. Manage Menu");
             Console.WriteLine("2. Display Daily Cafeteria Menu");
             Console.WriteLine("3. Student Account Management");
+            Console.WriteLine("4. Display Student Details");
             Console.WriteLine("0. Exit");
 
             int choice = GetIntInput("Enter your choice: ");
@@ -28,6 +29,9 @@ class Program
                     break;
                 case 3:
                     StudentAccountManagement();
+                    break;
+                case 4:
+                    DisplayStudentDetails();
                     break;
                 case 0:
                     Environment.Exit(0);
@@ -121,6 +125,7 @@ class Program
         Console.WriteLine("1. Add Student");
         Console.WriteLine("2. Delete Student");
         Console.WriteLine("3. Search Student Details");
+        Console.WriteLine("4. Display Student Details");
 
         int choice = GetIntInput("Enter your choice: ");
 
@@ -134,6 +139,9 @@ class Program
                 break;
             case 3:
                 SearchStudentDetails();
+                break;
+            case 4:
+                DisplayStudentDetails();
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please try again.");
@@ -194,6 +202,12 @@ class Program
         {
             Console.WriteLine("Student not found.");
         }
+    }
+
+    static void DisplayStudentDetails()
+    {
+        Console.WriteLine("\n********** Display Student Details **********");
+        DisplayStudents();
     }
 
     // Helper methods for input validation
