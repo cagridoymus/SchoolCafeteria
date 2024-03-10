@@ -5,7 +5,8 @@ class Program
 {
     static List<FoodItem> menu = new List<FoodItem>();
     static List<Student> students = new List<Student>();
-    static List<Feedback> feedbackList = new List<Feedback>(); // New list for storing feedback
+    static List<Feedback> feedbackList = new List<Feedback>();
+    static List<MealRating> mealRatings = new List<MealRating>(); // New list for storing meal ratings
 
     static void Main()
     {
@@ -16,6 +17,7 @@ class Program
             Console.WriteLine("2. Display Daily Cafeteria Menu");
             Console.WriteLine("3. Student Account Management");
             Console.WriteLine("4. Feedback");
+            Console.WriteLine("5. Rate Cafeteria Meals"); // New option
             Console.WriteLine("0. Exit");
 
             int choice = GetIntInput("Enter your choice: ");
@@ -33,6 +35,9 @@ class Program
                     break;
                 case 4:
                     FeedbackMenu();
+                    break;
+                case 5:
+                    RateCafeteriaMeals(); 
                     break;
                 case 0:
                     Environment.Exit(0);
@@ -162,9 +167,9 @@ class Program
     static void DisplayCurrentMenu()
     {
         Console.WriteLine("\n********** Current Menu **********");
-        foreach (var foodItem in menu)
+        for (int i = 0; i < menu.Count; i++)
         {
-            Console.WriteLine($"{foodItem.Name} - ${foodItem.Price:F2}");
+            Console.WriteLine($"{i}. {menu[i].Name} - ${menu[i].Price:F2} - Average Rating: {menu[i].AverageRating.ToString("F2")}");
         }
     }
 
@@ -178,9 +183,9 @@ class Program
         else
         {
             Console.WriteLine("\n********** Daily Cafeteria Menu **********");
-            foreach (var foodItem in menu)
+            for (int i = 0; i < menu.Count; i++)
             {
-                Console.WriteLine($"{foodItem.Name} - ${foodItem.Price:F2}");
+                Console.WriteLine($"{i}. {menu[i].Name} - ${menu[i].Price:F2} - Average Rating: {menu[i].AverageRating.ToString("F2")}");
             }
         }
     }
@@ -393,6 +398,54 @@ class Program
         }
     }
 
+    static void RateCafeteriaMeals()
+    {
+        Console.WriteLine("\n********** Rate Cafeteria Meals **********");
+        DisplayStudents();
+
+        int studentIndex = GetIntInput("Enter the index of the student rating meals: ");
+
+        if (studentIndex >= 0 && studentIndex < students.Count)
+        {
+            DisplayCurrentMenu();
+
+            int mealIndex = GetIntInput("Enter the index of the meal to rate: ");
+
+            if (mealIndex >= 0 && mealIndex < menu.Count)
+            {
+                int rating = GetIntInput("Enter the rating (1 to 5, where 1 is the lowest and 5 is the highest): ");
+
+                if (rating >= 1 && rating <= 5)
+                {
+                    menu[mealIndex].Ratings.Add(rating); // Add the rating to the FoodItem's Ratings list
+
+                    mealRatings.Add(new MealRating
+                    {
+                        StudentID = students[studentIndex].StudentID,
+                        MealIndex = mealIndex,
+                        Rating = rating,
+                        RatingDate = DateTime.Now
+                    });
+
+                    Console.WriteLine("Meal rated successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid rating. Please enter a value between 1 and 5.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid meal index. Rating canceled.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid student index. Rating canceled.");
+        }
+    }
+
+
     // Helper methods for input validation
 
     static double GetDoubleInput(string prompt)
@@ -428,7 +481,21 @@ class FoodItem
 {
     public string Name { get; set; }
     public double Price { get; set; }
-    public int Calories { get; set; } 
+    public int Calories { get; set; }
+    public List<int> Ratings { get; set; } = new List<int>();
+
+    public double AverageRating
+    {
+        get
+        {
+            if (Ratings.Count == 0)
+            {
+                return double.NaN; // Return NaN if there are no ratings
+            }
+
+            return Ratings.Average();
+        }
+    }
 
     public FoodItem(string name, double price, int calories)
     {
@@ -450,4 +517,12 @@ class Student
     public int StudentID { get; set; }
     public string Name { get; set; }
     public double CafeteriaBalance { get; set; }
+}
+
+class MealRating
+{
+    public int StudentID { get; set; }
+    public int MealIndex { get; set; }
+    public int Rating { get; set; }
+    public DateTime RatingDate { get; set; }
 }
