@@ -136,6 +136,7 @@ class Program
             Console.WriteLine($"Current details of {menu[index].Name}:");
             Console.WriteLine($"1. Name: {menu[index].Name}");
             Console.WriteLine($"2. Price: ${menu[index].Price:F2}");
+            Console.WriteLine($"3. Calories: {menu[index].Calories}");
 
             int updateChoice = GetIntInput("Enter the number of the detail to update (0 to cancel): ");
 
@@ -150,6 +151,10 @@ class Program
                     menu[index].Price = GetDoubleInput("Enter new food price: ");
                     Console.WriteLine("Food price updated successfully.");
                     break;
+                case 3:
+                    menu[index].Calories = GetIntInput("Enter new food calories: ");
+                    Console.WriteLine("Food calories updated successfully.");
+                    break;
                 case 0:
                     Console.WriteLine("Update canceled.");
                     break;
@@ -163,6 +168,7 @@ class Program
             Console.WriteLine("Invalid index. Please try again.");
         }
     }
+
 
     static void DisplayCurrentMenu()
     {
@@ -185,10 +191,11 @@ class Program
             Console.WriteLine("\n********** Daily Cafeteria Menu **********");
             for (int i = 0; i < menu.Count; i++)
             {
-                Console.WriteLine($"{i}. {menu[i].Name} - ${menu[i].Price:F2} - Average Rating: {menu[i].AverageRating.ToString("F2")}");
+                Console.WriteLine($"{i}. {menu[i].Name} - ${menu[i].Price:F2} - Calories: {menu[i].Calories} - Average Rating: {menu[i].AverageRating.ToString("F2")}");
             }
         }
     }
+
 
     static void StudentAccountManagement()
     {
@@ -197,7 +204,8 @@ class Program
         Console.WriteLine("2. Delete Student");
         Console.WriteLine("3. Search Student Details");
         Console.WriteLine("4. Display Student Details");
-        Console.WriteLine("5. Update Student Information"); // New option
+        Console.WriteLine("5. Update Student Information");
+        Console.WriteLine("6. Manage Allergen Information");
 
         int choice = GetIntInput("Enter your choice: ");
 
@@ -216,7 +224,10 @@ class Program
                 DisplayStudentDetails();
                 break;
             case 5:
-                UpdateStudentInformation(); // New case
+                UpdateStudentInformation();
+                break;
+            case 6:
+                ManageAllergenInformation();
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please try again.");
@@ -330,7 +341,28 @@ class Program
     {
         Console.WriteLine("\n********** Display Student Details **********");
         DisplayStudents();
+
+        int index = GetIntInput("Enter the index of the student to view details: ");
+
+        if (index >= 0 && index < students.Count)
+        {
+            Console.WriteLine($"ID: {students[index].StudentID} - Name: {students[index].Name} - Cafeteria Balance: ${students[index].CafeteriaBalance:F2}");
+
+            if (students[index].Allergens.Count > 0)
+            {
+                Console.WriteLine($"Allergens: {string.Join(", ", students[index].Allergens)}");
+            }
+            else
+            {
+                Console.WriteLine("No allergen information available.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid index. Please try again.");
+        }
     }
+
 
     static void FeedbackMenu()
     {
@@ -445,6 +477,38 @@ class Program
         }
     }
 
+    static void ManageAllergenInformation()
+    {
+        DisplayStudents();
+
+        if (students.Count == 0)
+        {
+            Console.WriteLine("No students available to manage allergen information.");
+            return;
+        }
+
+        int index = GetIntInput("Enter the index of the student to manage allergen information: ");
+
+        if (index >= 0 && index < students.Count)
+        {
+            Console.WriteLine($"\n********** Manage Allergen Information **********");
+            Console.WriteLine($"Current allergens for {students[index].Name}: {string.Join(", ", students[index].Allergens)}");
+
+            Console.Write("Enter allergen information (comma-separated list): ");
+            string allergensInput = Console.ReadLine();
+            List<string> newAllergens = allergensInput.Split(',').Select(a => a.Trim()).ToList();
+
+            students[index].Allergens = newAllergens;
+
+            Console.WriteLine("Allergen information updated successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid index. Please try again.");
+        }
+    }
+
+
 
     // Helper methods for input validation
 
@@ -517,6 +581,7 @@ class Student
     public int StudentID { get; set; }
     public string Name { get; set; }
     public double CafeteriaBalance { get; set; }
+    public List<string> Allergens { get; set; } = new List<string>(); 
 }
 
 class MealRating
