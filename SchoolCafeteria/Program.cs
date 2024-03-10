@@ -5,6 +5,7 @@ class Program
 {
     static List<FoodItem> menu = new List<FoodItem>();
     static List<Student> students = new List<Student>();
+    static List<Feedback> feedbackList = new List<Feedback>(); // New list for storing feedback
 
     static void Main()
     {
@@ -14,6 +15,7 @@ class Program
             Console.WriteLine("1. Manage Menu");
             Console.WriteLine("2. Display Daily Cafeteria Menu");
             Console.WriteLine("3. Student Account Management");
+            Console.WriteLine("4. Feedback");
             Console.WriteLine("0. Exit");
 
             int choice = GetIntInput("Enter your choice: ");
@@ -28,6 +30,9 @@ class Program
                     break;
                 case 3:
                     StudentAccountManagement();
+                    break;
+                case 4:
+                    FeedbackMenu();
                     break;
                 case 0:
                     Environment.Exit(0);
@@ -322,6 +327,72 @@ class Program
         DisplayStudents();
     }
 
+    static void FeedbackMenu()
+    {
+        Console.WriteLine("\n********** Feedback Menu **********");
+        Console.WriteLine("1. Submit Feedback");
+        Console.WriteLine("2. View Feedback");
+
+        int choice = GetIntInput("Enter your choice: ");
+
+        switch (choice)
+        {
+            case 1:
+                SubmitFeedback();
+                break;
+            case 2:
+                ViewFeedback();
+                break;
+            default:
+                Console.WriteLine("Invalid choice. Returning to main menu.");
+                break;
+        }
+    }
+
+    static void SubmitFeedback()
+    {
+        Console.WriteLine("\n********** Submit Feedback **********");
+        DisplayStudents();
+
+        int studentIndex = GetIntInput("Enter the index of the student submitting feedback: ");
+
+        if (studentIndex >= 0 && studentIndex < students.Count)
+        {
+            Console.Write("Enter feedback: ");
+            string studentFeedback = Console.ReadLine();
+
+            feedbackList.Add(new Feedback
+            {
+                StudentID = students[studentIndex].StudentID,
+                FeedbackText = studentFeedback,
+                SubmissionDate = DateTime.Now
+            });
+
+            Console.WriteLine("Feedback submitted successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid student index. Feedback submission canceled.");
+        }
+    }
+
+    static void ViewFeedback()
+    {
+        Console.WriteLine("\n********** View Feedback **********");
+
+        if (feedbackList.Count > 0)
+        {
+            foreach (var feedback in feedbackList)
+            {
+                Console.WriteLine($"Student ID: {feedback.StudentID} - Feedback: {feedback.FeedbackText} - Submission Date: {feedback.SubmissionDate}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No feedback available.");
+        }
+    }
+
     // Helper methods for input validation
 
     static double GetDoubleInput(string prompt)
@@ -365,6 +436,13 @@ class FoodItem
         Price = price;
         Calories = calories;
     }
+}
+
+class Feedback
+{
+    public int StudentID { get; set; }
+    public string FeedbackText { get; set; }
+    public DateTime SubmissionDate { get; set; }
 }
 
 class Student
