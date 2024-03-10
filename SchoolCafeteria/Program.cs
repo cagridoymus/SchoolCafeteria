@@ -187,6 +187,7 @@ class Program
         Console.WriteLine("2. Delete Student");
         Console.WriteLine("3. Search Student Details");
         Console.WriteLine("4. Display Student Details");
+        Console.WriteLine("5. Update Student Information"); // New option
 
         int choice = GetIntInput("Enter your choice: ");
 
@@ -202,13 +203,63 @@ class Program
                 SearchStudentDetails();
                 break;
             case 4:
-                DisplayStudentDetails(); // Adding the new case
+                DisplayStudentDetails();
+                break;
+            case 5:
+                UpdateStudentInformation(); // New case
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please try again.");
                 break;
         }
     }
+
+    static void UpdateStudentInformation()
+    {
+        DisplayStudents();
+
+        if (students.Count == 0)
+        {
+            Console.WriteLine("No students available to update.");
+            return;
+        }
+
+        int index = GetIntInput("Enter the index of the student to update information: ");
+
+        if (index >= 0 && index < students.Count)
+        {
+            Console.WriteLine($"\n********** Update Student Information **********");
+            Console.WriteLine($"Current information of {students[index].Name}:");
+            Console.WriteLine($"ID: {students[index].StudentID} - Name: {students[index].Name} - Cafeteria Balance: ${students[index].CafeteriaBalance:F2}");
+
+            int updateChoice = GetIntInput("Enter the number of the detail to update (0 to cancel): ");
+
+            switch (updateChoice)
+            {
+                case 1:
+                    Console.Write("Enter new student name: ");
+                    students[index].Name = Console.ReadLine();
+                    Console.WriteLine("Student name updated successfully.");
+                    break;
+                case 2:
+                    students[index].CafeteriaBalance = GetDoubleInput("Enter new cafeteria balance: ");
+                    Console.WriteLine("Cafeteria balance updated successfully.");
+                    break;
+                case 0:
+                    Console.WriteLine("Update canceled.");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Update canceled.");
+                    break;
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid index. Please try again.");
+        }
+    }
+
+
 
     static void AddStudent()
     {
@@ -238,15 +289,15 @@ class Program
             Console.WriteLine("Invalid index. Please try again.");
         }
     }
-
     static void DisplayStudents()
     {
         Console.WriteLine("\n********** Current Students **********");
-        foreach (var student in students)
+        for (int i = 0; i < students.Count; i++)
         {
-            Console.WriteLine($"ID: {student.StudentID} - {student.Name} - Cafeteria Balance: ${student.CafeteriaBalance:F2}");
+            Console.WriteLine($"Index: {i} - ID: {students[i].StudentID} - {students[i].Name} - Cafeteria Balance: ${students[i].CafeteriaBalance:F2}");
         }
     }
+
 
     static void SearchStudentDetails()
     {
